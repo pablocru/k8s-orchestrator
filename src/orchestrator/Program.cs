@@ -1,11 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () =>
+app.MapGet("/", (ILogger<Program> logger) =>
 {
   var message = "Hello World!";
 
-  Console.WriteLine(message);
+  logger.LogInformation("Message: {Message}", message);
   return message;
 });
 
