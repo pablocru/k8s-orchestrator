@@ -1,0 +1,47 @@
+# Ignore compiled binaries
+**/bin/
+**/obj/
+
+# Ignore Visual Studio settings
+**/.vs/
+*.user
+*.suo
+
+# Ignore temporary and log files
+*.log
+*.tmp
+*.temp
+
+# Ignore locally downloaded packages
+**/packages/
+*.nupkg
+
+# Ignore test results
+TestResults/
+*.trx
+*.coverage
+*.cov
+
+# Ignore local configuration files
+launchSettings.json
+
+# Ignore backup files
+*~
+*.bak
+
+# Ignore publish artifacts
+**/publish/
+**/dist/
+
+# Ignore Docker files not related to the current build
+Dockerfile
+docker-compose*
+.dockerignore
+
+# Ignore version control files
+.git/
+.gitignore
+.gitattributes
+
+# Ignore documentation and markdown files (optional)
+*.md
