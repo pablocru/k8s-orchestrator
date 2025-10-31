@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Variables
 IMAGE_NAME=k8s-orch
 
