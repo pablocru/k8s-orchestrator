@@ -112,7 +112,12 @@ public class CronJobService : ICronJobService, IHostedService
             _logger.LogError(ex, "Error executing scheduled task.");
           }
 
-          _logger.LogInformation("Waiting {Interval} before next execution...", _taskInterval);
+          var nextExecution = now.Add(_taskInterval);
+          _logger.LogInformation(
+            "Waiting {Interval} before next execution at {NextExecution}.",
+            _taskInterval,
+            nextExecution
+          );
           delay = _taskInterval;
         }
         else
@@ -120,7 +125,10 @@ public class CronJobService : ICronJobService, IHostedService
           var nextStart = now.Date.AddDays(now.TimeOfDay < _startHour ? 0 : 1).Add(_startHour);
           delay = nextStart - now;
 
-          _logger.LogInformation("Outside working hours. Waiting until {NextStart}.", nextStart);
+          _logger.LogInformation(
+            "Outside working hours. Waiting until {NextStart}.",
+            nextStart
+          );
         }
 
         await Task.Delay(delay, cancellationToken);
