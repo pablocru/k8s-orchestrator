@@ -4,20 +4,20 @@ using Orchestrator.Services;
 namespace Orchestrator.Controllers;
 
 [ApiController]
-[Route("api/[controller]")] // /api/job (JobController = job; [controller] = job)
-public class JobController : ControllerBase
+[Route("api/[controller]")]
+public class CronJobController : ControllerBase
 {
-  private readonly ILogger<JobController> _logger;
+  private readonly ILogger<CronJobController> _logger;
   private readonly ICronJobService _cronService;
 
-  public JobController(ILogger<JobController> logger, ICronJobService cronService)
+  public CronJobController(ILogger<CronJobController> logger, ICronJobService cronService)
   {
     _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     _cronService = cronService ?? throw new ArgumentNullException(nameof(cronService));
   }
 
   [HttpGet("start")]
-  public IActionResult StartContinuousJob()
+  public IActionResult Start()
   {
     _logger.LogInformation("Starting CronJob via API call...");
 
@@ -36,7 +36,7 @@ public class JobController : ControllerBase
   }
 
   [HttpGet("stop")]
-  public IActionResult StopContinuousJob()
+  public IActionResult Stop()
   {
     _logger.LogInformation("Stopping CronJob via API call...");
 
@@ -55,7 +55,7 @@ public class JobController : ControllerBase
   }
 
   [HttpGet("run-once")]
-  public async Task<IActionResult> RunJobOnce()
+  public async Task<IActionResult> RunOnce()
   {
     _logger.LogInformation("Running Job via API call...");
 
