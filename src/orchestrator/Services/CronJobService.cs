@@ -5,30 +5,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-public class CronJobService : ICronJobService, IHostedService
+public class CronJobService(
+  ILogger<CronJobService> logger,
+  ICronJobTask task,
+  TimeSpan startHour,
+  TimeSpan endHour,
+  TimeSpan taskInterval) : ICronJobService, IHostedService
 {
-  private readonly ILogger<CronJobService> _logger;
-  private readonly ICronJobTask _task;
+  private readonly ILogger<CronJobService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+  private readonly ICronJobTask _task = task ?? throw new ArgumentNullException(nameof(task));
   private CancellationTokenSource? _cts;
   private Task? _runningTask;
   private CronJobStatus _status = CronJobStatus.Idle;
-  private readonly TimeSpan _startHour;
-  private readonly TimeSpan _endHour;
-  private readonly TimeSpan _taskInterval;
-
-  public CronJobService(
-    ILogger<CronJobService> logger,
-    ICronJobTask task,
-    TimeSpan startHour,
-    TimeSpan endHour,
-    TimeSpan taskInterval)
-  {
-    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    _task = task ?? throw new ArgumentNullException(nameof(task));
-    _startHour = startHour;
-    _endHour = endHour;
-    _taskInterval = taskInterval;
-  }
+  private readonly TimeSpan _startHour = startHour;
+  private readonly TimeSpan _endHour = endHour;
+  private readonly TimeSpan _taskInterval = taskInterval;
 
   public bool Start()
   {

@@ -1,13 +1,8 @@
 ﻿namespace Orchestrator.Services;
 
-public class ExampleTask : ICronJobTask
+public class ExampleTask(ILogger<ExampleTask> logger) : ICronJobTask
 {
-  private readonly ILogger<ExampleTask> _logger;
-
-  public ExampleTask(ILogger<ExampleTask> logger)
-  {
-    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-  }
+  private readonly ILogger<ExampleTask> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
   public async Task ExecuteAsync(CancellationToken cancellationToken)
   {

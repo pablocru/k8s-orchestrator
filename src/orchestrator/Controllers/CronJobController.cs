@@ -5,16 +5,10 @@ namespace Orchestrator.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CronJobController : ControllerBase
+public class CronJobController(ILogger<CronJobController> logger, ICronJobService cronService) : ControllerBase
 {
-  private readonly ILogger<CronJobController> _logger;
-  private readonly ICronJobService _cronService;
-
-  public CronJobController(ILogger<CronJobController> logger, ICronJobService cronService)
-  {
-    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    _cronService = cronService ?? throw new ArgumentNullException(nameof(cronService));
-  }
+  private readonly ILogger<CronJobController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+  private readonly ICronJobService _cronService = cronService ?? throw new ArgumentNullException(nameof(cronService));
 
   [HttpGet("start")]
   public IActionResult Start()
