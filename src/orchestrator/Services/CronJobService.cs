@@ -125,6 +125,10 @@ public class CronJobService : ICronJobService, IHostedService
 
         await Task.Delay(delay, cancellationToken);
       }
+      catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
+      {
+        _logger.LogInformation("CronJob loop canceled due to Stop() request.");
+      }
       catch (Exception ex)
       {
         _logger.LogError(ex, "Unexpected error in CronJob loop iteration.");
