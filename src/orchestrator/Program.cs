@@ -39,6 +39,7 @@ builder.Services.AddSingleton<ICronJobService>(sp =>
 // Register Cron Job as a HostedService to auto-start
 builder.Services.AddHostedService(sp => (CronJobService)sp.GetRequiredService<ICronJobService>());
 
+// Run app
 var app = builder.Build();
 app.MapControllers();
 app.Run();
