@@ -1,38 +1,83 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Orchestrator.Services;
 
-namespace orchestrator.Controllers;
+namespace Orchestrator.Controllers;
 
 [ApiController]
 [Route("api/[controller]")] // /api/job (JobController = job; [controller] = job)
-public class JobController(ILogger<JobController> logger) : ControllerBase
+public class JobController : ControllerBase
 {
+  private readonly ILogger<JobController> _logger;
+  private readonly ICronJobService _cronService;
+
+  public JobController(ILogger<JobController> logger, ICronJobService cronService)
+  {
+    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    _cronService = cronService ?? throw new ArgumentNullException(nameof(cronService));
+  }
+
   [HttpGet("start")]
   public IActionResult StartContinuousJob()
   {
-    logger.LogInformation("Starting Cron Job via API call...");
+    _logger.LogInformation("Starting CronJob via API call...");
 
-    var message = "Cron Job started successfully";
-    logger.LogInformation("{Message}", message);
-    return Ok(new { message });
+    if (_cronService.Start())
+    {
+      var message = "CronJob started successfully";
+      _logger.LogInformation("{Message}", message);
+      return Ok(new { message });
+    }
+    else
+    {
+      var message = "CronJob is already running";
+      _logger.LogWarning("{Message}", message);
+      return BadRequest(new { message });
+    }
   }
 
   [HttpGet("stop")]
   public IActionResult StopContinuousJob()
   {
-    logger.LogInformation("Stopping Cron Job via API call...");
+    _logger.LogInformation("Stopping CronJob via API call...");
 
-    var message = "Cron Job stopped successfully";
-    logger.LogInformation("{Message}", message);
-    return Ok(new { message });
+    if (_cronService.Stop())
+    {
+      var message = "CronJob stopped successfully";
+      _logger.LogInformation("{Message}", message);
+      return Ok(new { message });
+    }
+    else
+    {
+      var message = "CronJob was not running";
+      _logger.LogWarning("{Message}", message);
+      return BadRequest(new { message });
+    }
   }
 
   [HttpGet("run-once")]
-  public IActionResult RunJobOnce()
+  public async Task<IActionResult> RunJobOnce()
   {
-    logger.LogInformation("Running Job via API call...");
+    _logger.LogInformation("Running Job via API call...");
 
-    var message = "Job ran successfully";
-    logger.LogInformation("{Message}", message);
-    return Ok(new { message });
+    if (await _cronService.RunOnceAsync())
+    {
+      var message = "Job ran successfully";
+      _logger.LogInformation("{Message}", message);
+      return Ok(new { message });
+    }
+    else
+    {
+      var message = "Job could not run because CronJob is already running";
+      _logger.LogWarning("{Message}", message);
+      return BadRequest(new { message });
+    }
+  }
+
+  [HttpGet("status")]
+  public IActionResult GetStatus()
+  {
+    var status = _cronService.GetStatus();
+    _logger.LogInformation("CronJob status requested: {Status}", status);
+    return Ok(new { status = status.ToString() });
   }
 }
