@@ -1,25 +1,24 @@
-﻿namespace Orchestrator.Services;
+﻿using Microsoft.Extensions.Options;
+using Orchestrator.Configuration;
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+namespace Orchestrator.Services;
 
 public class CronJobService(
   ILogger<CronJobService> logger,
   ICronJobTask task,
-  TimeSpan startHour,
-  TimeSpan endHour,
-  TimeSpan taskInterval) : ICronJobService, IHostedService
+  IOptions<CronJobSettings> settings) : ICronJobService, IHostedService
 {
   private readonly ILogger<CronJobService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
   private readonly ICronJobTask _task = task ?? throw new ArgumentNullException(nameof(task));
   private CancellationTokenSource? _cts;
   private Task? _runningTask;
   private CronJobStatus _status = CronJobStatus.Idle;
-  private readonly TimeSpan _startHour = startHour;
-  private readonly TimeSpan _endHour = endHour;
-  private readonly TimeSpan _taskInterval = taskInterval;
+
+  // First one checks if "settings" is not null
+  private readonly TimeSpan _startHour = settings?.Value.StartHour
+      ?? throw new ArgumentNullException(nameof(settings));
+  private readonly TimeSpan _endHour = settings.Value.EndHour;
+  private readonly TimeSpan _taskInterval = settings.Value.TaskInterval;
 
   public bool Start()
   {

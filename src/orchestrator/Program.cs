@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Options;
-using Orchestrator.Services;
 using Orchestrator.Configuration;
+using Orchestrator.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Validate appsettings.json
 builder.Services.AddOptions<CronJobSettings>()
   .Bind(builder.Configuration.GetSection("CronJobSettings"))
-  .ValidateDataAnnotations()
   .ValidateOnStart();
 builder.Services.AddOptions<HttpOrchestratorSettings>()
   .Bind(builder.Configuration.GetSection("HttpOrchestratorSettings"))
@@ -25,20 +23,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ICronJobTask, HttpOrchestratorTask>();
 
 // Register Cron Job Service also as a Singleton because only one is needed
-builder.Services.AddSingleton<ICronJobService>(sp =>
-{
-  var logger = sp.GetRequiredService<ILogger<CronJobService>>();
-  var task = sp.GetRequiredService<ICronJobTask>();
-  var settings = sp.GetRequiredService<IOptions<CronJobSettings>>().Value;
-
-  return new CronJobService(
-    logger,
-    task,
-    TimeSpan.FromHours(settings.StartHour),
-    TimeSpan.FromHours(settings.EndHour),
-    TimeSpan.FromMinutes(settings.TaskIntervalMinutes)
-  );
-});
+builder.Services.AddSingleton<ICronJobService, CronJobService>();
 
 // Register Cron Job as a HostedService to auto-start
 builder.Services.AddHostedService(sp => (CronJobService)sp.GetRequiredService<ICronJobService>());
