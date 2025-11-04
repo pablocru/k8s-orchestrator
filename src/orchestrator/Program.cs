@@ -10,6 +10,9 @@ builder.Services.AddOptions<CronJobSettings>()
   .Bind(builder.Configuration.GetSection("CronJobSettings"))
   .ValidateDataAnnotations()
   .ValidateOnStart();
+builder.Services.AddOptions<HttpOrchestratorSettings>()
+  .Bind(builder.Configuration.GetSection("HttpOrchestratorSettings"))
+  .ValidateOnStart();
 
 // Configure Serilog
 builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
@@ -17,10 +20,11 @@ builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration
 // Register Controllers
 builder.Services.AddControllers();
 
-// Register sample Task
-builder.Services.AddSingleton<ICronJobTask, ExampleTask>();
+// Register HTTP Client & Orchestrator Task as a Singleton because only one is needed
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<ICronJobTask, HttpOrchestratorTask>();
 
-// Register Cron Job Service
+// Register Cron Job Service also as a Singleton because only one is needed
 builder.Services.AddSingleton<ICronJobService>(sp =>
 {
   var logger = sp.GetRequiredService<ILogger<CronJobService>>();
