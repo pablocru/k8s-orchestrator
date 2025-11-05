@@ -52,13 +52,9 @@ public class HttpOrchestratorTask(
     try
     {
       var response = await _httpClient.GetAsync(url, cancellationToken);
+      var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-      if (!response.IsSuccessStatusCode)
-      {
-        return $"Error calling {url}: HTTP {(int)response.StatusCode} ({response.StatusCode})";
-      }
-
-      return await response.Content.ReadAsStringAsync(cancellationToken);
+      return $"HTTP {(int)response.StatusCode} ({response.StatusCode}) - {content}";
     }
     catch (HttpRequestException ex)
     {
