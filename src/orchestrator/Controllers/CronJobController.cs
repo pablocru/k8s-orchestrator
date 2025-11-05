@@ -63,7 +63,7 @@ public class CronJobController(ILogger<CronJobController> logger, ICronJobServic
     {
       var message = "Job could not run because CronJob is already running";
       _logger.LogWarning("{Message}", message);
-      return BadRequest(new { message });
+      return Conflict(new { message });
     }
   }
 
