@@ -62,7 +62,7 @@ public class HttpOrchestratorTask(
     }
     catch (OperationCanceledException)
     {
-      return $"Error calling {url}: operation canceled";
+      return $"HTTP request to {url} canceled because CronJob was stopped";
     }
     catch (Exception ex)
     {
