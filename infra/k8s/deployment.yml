@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-deployment
+  labels:
+    app: k8s-orchestrator
+    role: orchestrator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: orchestrator-pod
+  template:
+    metadata:
+      labels:
+        app: k8s-orchestrator
+        role: orchestrator-pod
+    spec:
+      containers:
+        - name: orchestrator-container
+          image: k8s-orch
+          imagePullPolicy: Never # Use local images
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "100m"
+              memory: "256Mi"

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orchestrator-service
+  labels:
+    app: k8s-orchestrator
+    role: orchestrator-service
+spec:
+  selector:
+    role: orchestrator-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort
