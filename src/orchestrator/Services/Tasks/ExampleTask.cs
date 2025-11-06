@@ -1,4 +1,4 @@
-﻿namespace Orchestrator.Services;
+﻿namespace Orchestrator.Services.Tasks;
 
 public class ExampleTask(ILogger<ExampleTask> logger) : ICronJobTask
 {

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Orchestrator.Configuration;
+using Orchestrator.Services.Tasks;
 
-namespace Orchestrator.Services;
+namespace Orchestrator.Services.CronJob;
 
 public class CronJobService(
   ILogger<CronJobService> logger,

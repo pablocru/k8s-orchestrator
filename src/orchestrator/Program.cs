@@ -1,5 +1,6 @@
 using Orchestrator.Configuration;
-using Orchestrator.Services;
+using Orchestrator.Services.CronJob;
+using Orchestrator.Services.Tasks;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

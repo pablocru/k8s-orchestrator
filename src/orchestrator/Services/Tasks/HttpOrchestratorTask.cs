@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 using Orchestrator.Configuration;
 using System.Diagnostics;
 
-namespace Orchestrator.Services;
+namespace Orchestrator.Services.Tasks;
 
 public class HttpOrchestratorTask(
     ILogger<HttpOrchestratorTask> logger,

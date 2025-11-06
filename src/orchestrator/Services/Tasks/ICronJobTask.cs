@@ -1,4 +1,4 @@
-﻿namespace Orchestrator.Services;
+﻿namespace Orchestrator.Services.Tasks;
 
 public interface ICronJobTask
 {
