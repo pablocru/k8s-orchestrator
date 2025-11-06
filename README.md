@@ -84,7 +84,7 @@ Run the project directly using the .NET SDK.
 
 ```bash
 # Move to folder
-cd src/orchestrator
+cd src/Orchestrator
 
 # Restore dependencies
 dotnet restore

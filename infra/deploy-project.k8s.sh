@@ -4,6 +4,8 @@ set -e
 
 # Variables
 IMAGE_NAME=k8s-orch
+ORCH_DOCKERFILE="../src/Orchestrator/Dockerfile"
+ORCH_DOCKER_CONTEXT="../src/"
 APP_LABEL="app=k8s-orchestrator"
 DEPLOYMENT_FILE="k8s/deployment.yml"
 SERVICE_FILE="k8s/service.yml"
@@ -20,7 +22,7 @@ fi
 echo
 echo "Building Docker Image..."
 eval $(minikube docker-env)
-docker build -f ../src/orchestrator/Dockerfile -t $IMAGE_NAME ../src/
+docker build -f $ORCH_DOCKERFILE -t $IMAGE_NAME $ORCH_DOCKER_CONTEXT
 
 echo
 echo "Applying k8s infra..."

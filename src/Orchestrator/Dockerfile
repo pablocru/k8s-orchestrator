@@ -6,8 +6,8 @@ RUN adduser --disabled-password --home /user --gecos '' user
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore orchestrator/orchestrator.csproj
-RUN dotnet publish orchestrator/orchestrator.csproj -c Release -o /app/publish
+RUN dotnet restore Orchestrator/Orchestrator.csproj
+RUN dotnet publish Orchestrator/Orchestrator.csproj -c Release -o /app/publish
 
 FROM base AS runner
 WORKDIR /app
@@ -16,4 +16,4 @@ RUN chown -R user /app
 RUN chmod -R 755 /app
 USER user
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "orchestrator.dll"]
+ENTRYPOINT ["dotnet", "Orchestrator.dll"]
